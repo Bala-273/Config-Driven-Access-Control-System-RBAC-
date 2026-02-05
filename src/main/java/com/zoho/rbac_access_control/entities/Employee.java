@@ -26,8 +26,7 @@ public class Employee {
 
     public Employee(){}
 
-    public Employee(Integer id, String name, String email, String phone, String department, Integer salary, LocalDate joiningDate) {
-        this.id = id;
+    public Employee(String name, String email, String phone, String department, Integer salary, LocalDate joiningDate) {
         this.name = name;
         this.email = email;
         this.phone = phone;
