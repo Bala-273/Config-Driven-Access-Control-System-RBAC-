@@ -1,0 +1,10 @@
+package com.zoho.rbac_access_control.repositories;
+
+import com.zoho.rbac_access_control.entities.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByUsername(String username);
+}
