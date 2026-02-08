@@ -1,6 +1,5 @@
 package com.zoho.rbac_access_control.controllers;
 
-import com.zoho.rbac_access_control.dto.EmployeeResponse;
 import com.zoho.rbac_access_control.entities.Employee;
 import com.zoho.rbac_access_control.entities.User;
 import com.zoho.rbac_access_control.services.*;
@@ -18,28 +17,30 @@ public class EmployeeController {
     private final AccessControlService accessControlService;
     private final PermissionFilterService permissionFilterService;
     private final EntityUpdateService entityUpdateService;
+    private final CurrentUserService currentUserService;
 
-    public EmployeeController(EmployeeService employeeService, UserService userService, AccessControlService accessControlService, PermissionFilterService permissionFilterService, EntityUpdateService entityUpdateService){
+    public EmployeeController(EmployeeService employeeService, UserService userService, AccessControlService accessControlService, PermissionFilterService permissionFilterService, EntityUpdateService entityUpdateService, CurrentUserService currentUserService){
         this.employeeService = employeeService;
         this.userService = userService;
         this.accessControlService = accessControlService;
         this.permissionFilterService = permissionFilterService;
         this.entityUpdateService = entityUpdateService;
+        this.currentUserService = currentUserService;
     }
 
-    private User getLoggedInUser(String usernameHeader){
-        if(usernameHeader == null || usernameHeader.isEmpty()){
-            throw new RuntimeException("X_USER header is required");
-        }
-        return userService.getByUsername(usernameHeader);
-    }
+//    private User getLoggedInUser(String usernameHeader){
+//        if(usernameHeader == null || usernameHeader.isEmpty()){
+//            throw new RuntimeException("X_USER header is required");
+//        }
+//        return userService.getByUsername(usernameHeader);
+//    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Employee createEmployee(@RequestBody Employee employee,
                                    @RequestHeader(value = "X-USER", required = false) String username){
 
-        User user = getLoggedInUser(username);
+        User user = currentUserService.getLoggedInUser(username);
         if(!accessControlService.canEditTable(user, "employees")){
             throw new RuntimeException("Access Denied");
         }
@@ -48,7 +49,7 @@ public class EmployeeController {
 
     @GetMapping
     public List<Map<String, Object>> getAllEmployees(@RequestHeader(value = "X-USER", required = false) String username){
-        User user = getLoggedInUser(username);
+        User user = currentUserService.getLoggedInUser(username);
         if(!accessControlService.canViewTable(user, "employees")){
             throw new RuntimeException("Access denied: cannot view employees");
         }
@@ -59,8 +60,7 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public Map<String, Object> getEmployeeById(@PathVariable Integer id, @RequestHeader(value = "X-USER", required = false) String username){
-        User user = getLoggedInUser(username);
-
+        User user = currentUserService.getLoggedInUser(username);
         if(!accessControlService.canViewTable(user, "employees")){
             throw new RuntimeException("Access denied: cannot view employees");
         }
@@ -71,8 +71,7 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     public Employee updateEmployee(@PathVariable Integer id, @RequestBody Employee requestEmployee, @RequestHeader(value = "X-USER", required = false) String username){
-        User user = getLoggedInUser(username);
-
+        User user = currentUserService.getLoggedInUser(username);
         if(!accessControlService.canEditTable(user, "employees")){
             throw new RuntimeException("Access denied: cannot edit employees");
         }
@@ -87,7 +86,8 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEmployee(@PathVariable Integer id, @RequestHeader(value = "X-USER", required = false) String username){
-        User user = getLoggedInUser(username);
+        User user = currentUserService.getLoggedInUser(username);
+
         if(!accessControlService.canEditTable(user, "employees")){
             throw new RuntimeException("Access denied: cannot delete employees");
         }

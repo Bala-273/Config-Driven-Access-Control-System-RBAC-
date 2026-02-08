@@ -1,6 +1,7 @@
 package com.zoho.rbac_access_control.services.impl;
 
 import com.zoho.rbac_access_control.entities.Project;
+import com.zoho.rbac_access_control.exceptions.ResourceNotFoundException;
 import com.zoho.rbac_access_control.repositories.ProjectRepository;
 import com.zoho.rbac_access_control.services.ProjectService;
 import org.springframework.stereotype.Service;
@@ -29,21 +30,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project getProjectById(Integer id) {
         return projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
     }
 
     @Override
     public Project updateProject(Integer id, Project updatedProject) {
-        Project existingProject = getProjectById(id);
+        updatedProject.setId(id);
 
-        existingProject.setName(updatedProject.getName());
-        existingProject.setClientName(updatedProject.getClientName());
-        existingProject.setBudget(updatedProject.getBudget());
-        existingProject.setStartDate(updatedProject.getStartDate());
-        existingProject.setEndDate(updatedProject.getEndDate());
-        existingProject.setStatus(updatedProject.getStatus());
-
-        return projectRepository.save(existingProject);
+        return projectRepository.save(updatedProject);
     }
 
     @Override

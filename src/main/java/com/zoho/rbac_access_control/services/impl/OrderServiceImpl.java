@@ -1,6 +1,7 @@
 package com.zoho.rbac_access_control.services.impl;
 
 import com.zoho.rbac_access_control.entities.Order;
+import com.zoho.rbac_access_control.exceptions.ResourceNotFoundException;
 import com.zoho.rbac_access_control.repositories.OrderRepository;
 import com.zoho.rbac_access_control.services.OrderService;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Order getOrderById(Integer id){
         return orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
     public List<Order> getAllOrders(){
@@ -30,13 +31,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public Order updateOrder(Integer id, Order updatedOrder){
-        Order existingOrder = getOrderById(id);
+        updatedOrder.setId(id);
 
-        existingOrder.setCustomerName(updatedOrder.getCustomerName());
-        existingOrder.setTotalAmount(updatedOrder.getTotalAmount());
-        existingOrder.setPaymentStatus(updatedOrder.getPaymentStatus());
-
-        return orderRepository.save(existingOrder);
+        return orderRepository.save(updatedOrder);
     }
 
     public void deleteOrder(Integer id){

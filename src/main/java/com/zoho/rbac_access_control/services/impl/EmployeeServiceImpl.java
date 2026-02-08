@@ -1,6 +1,7 @@
 package com.zoho.rbac_access_control.services.impl;
 
 import com.zoho.rbac_access_control.entities.Employee;
+import com.zoho.rbac_access_control.exceptions.ResourceNotFoundException;
 import com.zoho.rbac_access_control.repositories.EmployeeRepository;
 import com.zoho.rbac_access_control.services.EmployeeService;
 import org.springframework.stereotype.Service;
@@ -28,20 +29,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getEmployeeById(Integer id) {
         return employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
     }
 
     @Override
     public Employee updateEmployee(Integer id, Employee updatedEmployee) {
-//        Employee existingEmployee = getEmployeeById(id);
-//
-//        existingEmployee.setName(updatedEmployee.getName());
-//        existingEmployee.setEmail(updatedEmployee.getEmail());
-//        existingEmployee.setPhone(updatedEmployee.getPhone());
-//        existingEmployee.setDepartment(updatedEmployee.getDepartment());
-//        existingEmployee.setSalary(updatedEmployee.getSalary());
-//        existingEmployee.setJoiningDate(updatedEmployee.getJoiningDate());
-
+        updatedEmployee.setId(id);
         return employeeRepository.save(updatedEmployee);
     }
 

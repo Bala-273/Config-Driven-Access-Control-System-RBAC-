@@ -22,7 +22,7 @@ public class AccessControlServiceImpl implements AccessControlService {
     private List<Permission> getUserPermissions(User user){
         List<Integer> roleIds = user.getRoles()
                 .stream().map(Role::getId).toList();
-        return permissionRepository.findByRoleIdIn(roleIds);
+        return permissionRepository.findByRole_IdIn(roleIds);
     }
 
     private boolean hasPermission(User user, String resource, ActionType action, ScopeType scope, String fieldName){
