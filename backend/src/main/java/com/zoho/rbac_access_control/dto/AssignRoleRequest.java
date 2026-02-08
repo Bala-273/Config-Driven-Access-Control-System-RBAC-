@@ -1,17 +1,17 @@
 package com.zoho.rbac_access_control.dto;
 
 public class AssignRoleRequest {
-    private Integer userId;
+    private String username;
     private Integer roleId;
 
     public AssignRoleRequest(){}
 
-    public Integer getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Integer getRoleId() {

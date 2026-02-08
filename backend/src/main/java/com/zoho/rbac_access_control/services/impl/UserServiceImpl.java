@@ -2,6 +2,7 @@ package com.zoho.rbac_access_control.services.impl;
 
 import com.zoho.rbac_access_control.entities.Role;
 import com.zoho.rbac_access_control.entities.User;
+import com.zoho.rbac_access_control.exceptions.ResourceNotFoundException;
 import com.zoho.rbac_access_control.repositories.RoleRepository;
 import com.zoho.rbac_access_control.repositories.UserRepository;
 import com.zoho.rbac_access_control.services.UserService;
@@ -48,8 +49,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User assignRole(Integer userId, Integer roleId) {
-        User user = getById(userId);
+    public User assignRole(String username, Integer roleId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
         user.getRoles().add(role);

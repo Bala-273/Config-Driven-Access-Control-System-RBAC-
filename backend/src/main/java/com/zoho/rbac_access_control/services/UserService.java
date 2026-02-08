@@ -9,5 +9,5 @@ public interface UserService {
     User createUser(String username, String password);
     User getById(Integer id);
     List<User> getAllUsers();
-    User assignRole(Integer userId, Integer roleId);
+    User assignRole(String userId, Integer roleId);
 }

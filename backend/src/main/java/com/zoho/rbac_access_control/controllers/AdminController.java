@@ -68,6 +68,6 @@ public class AdminController {
     @PostMapping("/assign-role")
     public User assignRole(@RequestBody AssignRoleRequest request, @RequestHeader(value = "X-ADMIN", required = false) String isAdminHeader){
         verifyAdmin(isAdminHeader);
-        return userService.assignRole(request.getUserId(), request.getRoleId());
+        return userService.assignRole(request.getUsername(), request.getRoleId());
     }
 }
